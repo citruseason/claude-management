@@ -1,0 +1,22 @@
+{
+  "name": "claude-management",
+  "version": "1.0.0",
+  "description": "Workflow orchestration plugin with Agent Teams + Skills for Claude Code",
+  "author": {
+    "name": "claude-management",
+    "url": "https://github.com/claude-management/claude-management"
+  },
+  "repository": "https://github.com/claude-management/claude-management",
+  "license": "MIT",
+  "keywords": [
+    "workflow",
+    "agents",
+    "code-review",
+    "planning",
+    "documentation"
+  ],
+  "agents": "./agents/",
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
+  "mcpServers": "./.mcp.json"
+}
