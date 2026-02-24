@@ -42,8 +42,7 @@ Parallel investigation from different angles. Teammates share discoveries and ch
 ```
 Create an agent team to research [topic]. Spawn teammates:
 - One exploring the codebase structure and existing patterns
-- One researching external documentation and best practices
-- One analyzing git history for context and past decisions
+- One researching external documentation, best practices, and historical context
 Have them share findings with each other and produce a consolidated report.
 ```
 

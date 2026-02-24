@@ -15,19 +15,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `/run` pipeline rewritten with imperative phase instructions and mandatory plan verification
 - `/verify` now discovers and reports external (non-verify-*) skills alongside verification skills
 - `/manage-skills` now proposes WRAP actions to create verify-* wrappers for external skills
-- `workflow-orchestrator` agent updated with critical rules enforcement
+
+### Removed
+- `research-docs` agent — orphaned, never referenced by any skill or agent
+- `research-git-history` agent — orphaned, never referenced by any skill or agent
+- `workflow-orchestrator` agent — superseded by `/run` skill which implements the pipeline inline
 
 ## [1.0.0] - 2026-02-24
 
 ### Added
 - Plugin manifest (`.claude-plugin/plugin.json`)
-- 12 custom subagents across 4 categories:
-  - Research: codebase, docs, git-history
+- 9 custom subagents across 4 categories:
+  - Research: codebase
   - Review: code, security, performance
-  - Workflow: orchestrator, planner, implementer, verifier
+  - Workflow: planner, implementer, verifier
   - Docs: generator, readme
 - Agent teams enabled via `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` in settings.json
-- 15 slash command skills:
+- 16 slash command skills:
   - Exploration: /explore, /trace
   - Review: /review, /security-audit
   - Workflow: /run (full pipeline, autonomous team decision), /team, /plan, /work, /verify, /ship

@@ -104,7 +104,7 @@ Spawn an agent team for parallel work with specialized role presets.
 | Preset | Teammates | Strategy |
 |--------|-----------|----------|
 | review | 3 | Code quality + Security + Performance — parallel review, synthesized report |
-| research | 2-3 | Codebase explorer + Docs researcher + Git historian — share findings, challenge conclusions |
+| research | 2 | Codebase explorer + Docs/history researcher — share findings, challenge conclusions |
 | implement | 2-4 | File-ownership split — each teammate owns separate modules, plan approval required |
 | debug | 3-5 | Competing hypotheses — teammates investigate different theories, debate to find root cause |
 
@@ -497,8 +497,6 @@ Read-only agents that explore and analyze without modifying files.
 | Agent | Purpose | Model | Max Turns |
 |-------|---------|-------|-----------|
 | research-codebase | Code structure, patterns, dependencies | sonnet | 30 |
-| research-docs | API docs, library references, documentation gaps | sonnet | 20 |
-| research-git-history | Git log/blame/diff analysis, code evolution | sonnet | 20 |
 
 ### Review Agents
 
@@ -516,12 +514,9 @@ Agents that drive the plan-work-verify cycle.
 
 | Agent | Purpose | Model | Max Turns | Tools |
 |-------|---------|-------|-----------|-------|
-| workflow-orchestrator | Full pipeline automation | inherit | 50 | Read, Write, Edit, Grep, Glob, Bash, Task |
 | workflow-planner | Implementation planning (read-only) | inherit | 25 | Read, Grep, Glob, Bash |
 | workflow-implementer | Code implementation (read-write) | inherit | 30 | Read, Write, Edit, Grep, Glob, Bash |
 | workflow-verifier | Testing and verification (read-only) | inherit | 20 | Read, Grep, Glob, Bash |
-
-The **workflow-orchestrator** is the meta-agent: it delegates to planner, implementer, verifier, and reviewer via the Task tool, managing quality gates between phases.
 
 ### Documentation Agents
 

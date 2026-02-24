@@ -4,7 +4,7 @@ Workflow orchestration plugin for Claude Code with Agent Teams and Skills.
 
 ## Features
 
-- **12 Custom Agents** - Research, review, workflow (with orchestrator), and documentation specialists
+- **9 Custom Agents** - Research, review, workflow, and documentation specialists
 - **16 Slash Commands** - `/init`, `/run`, `/team`, `/explore`, `/plan`, `/review`, `/work`, `/verify`, `/manage-skills`, `/ship`, and more
 - **Automated Pipeline** - `/run` orchestrates plan→work→verify→review→ship, autonomously using agent teams when beneficial
 - **Agent Teams** - `/team` spawns parallel Claude instances; `/run` auto-decides when to use them
@@ -17,7 +17,7 @@ Workflow orchestration plugin for Claude Code with Agent Teams and Skills.
 ## Documentation
 
 - **[Workflow Guide](docs/workflow-guide.md)** — Scenario-based examples (feature, bug fix, verification loop, session wrap-up)
-- **[Skill & Agent Reference](docs/skill-reference.md)** — Complete reference for all 16 skills and 12 agents
+- **[Skill & Agent Reference](docs/skill-reference.md)** — Complete reference for all 16 skills and 9 agents
 
 ## Quick Start
 
@@ -80,7 +80,7 @@ Skills installed from external sources (e.g. [skills.sh](https://skills.sh)) are
 claude-management/
 ├── .claude-plugin/plugin.json    # Plugin manifest
 ├── base/                         # Workflow rules (CLAUDE.md)
-├── agents/                       # 12 custom subagents
+├── agents/                       # 9 custom subagents
 ├── skills/                       # 16 slash commands
 ├── hooks/hooks.json              # Event-based quality gates
 ├── scripts/                      # Hook scripts
@@ -93,8 +93,6 @@ claude-management/
 
 ### Research
 - **research-codebase** - Explore code structure, patterns, dependencies (sonnet)
-- **research-docs** - API and documentation research (sonnet)
-- **research-git-history** - Git history analysis (sonnet)
 
 ### Review
 - **review-code** - Code quality, correctness, conventions (inherit)
@@ -102,7 +100,6 @@ claude-management/
 - **review-performance** - Performance bottleneck analysis (sonnet)
 
 ### Workflow
-- **workflow-orchestrator** - Full pipeline automation: plan→work→verify→review→ship (inherit)
 - **workflow-planner** - Implementation planning (inherit)
 - **workflow-implementer** - Code implementation (inherit)
 - **workflow-verifier** - Testing and verification (inherit)
