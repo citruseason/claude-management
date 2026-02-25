@@ -28,8 +28,10 @@ This single command orchestrates the entire pipeline. It:
 7. Captures lessons learned at the end
 
 The orchestrator analyzes the plan to decide execution strategy — no flag needed:
-- Steps modify different files across multiple modules? → **agent team** (parallel)
-- Steps are sequential or touch the same files? → **subagent** (sequential)
+- All steps independent? → **agent team** (fully parallel)
+- Mix of dependencies and independent steps? → **hybrid** (wave-based)
+- All steps strictly sequential OR 1-2 steps? → **subagent** (sequential)
+- Review phase → **review team** by default (3 parallel reviewers)
 
 ```
 Pipeline: feature
@@ -55,8 +57,8 @@ Task: Add JWT authentication to the Express API
   Tests: 28 passed | Lint: clean | Build: ok
   Status: PASS
 
-## Phase 4: REVIEW
-  Delegating to review-code...
+## Phase 4: REVIEW (review team)
+  3 parallel reviewers — code quality, security, performance
   Issues: 0 critical, 1 suggestion
   Status: PASS
 
@@ -537,6 +539,10 @@ Phases: PLAN → WORK → VERIFY → REVIEW → SHIP
 
 Pipeline complete.
 ```
+
+**Hybrid example**: If step 1 (install deps) must complete before steps 2-4 can start,
+the orchestrator runs step 1 as a subagent, then spawns a team for steps 2-4 in parallel,
+then runs step 5 (integration) as a subagent. This is the most common pattern.
 
 ---
 

@@ -65,6 +65,12 @@ Wait for all teammates to complete before proceeding.
 - Use the shared task list for dependency coordination
 - Teammates should message each other when completing interfaces that others depend on
 
+**Wave-based execution (hybrid mode)**:
+- When called from `/run` in hybrid mode, the team may execute a subset of plan steps
+- The orchestrator handles wave sequencing — the team focuses on its assigned wave
+- Teammates within a wave follow the same file-ownership rules as full team mode
+- After wave completion, report status back so the orchestrator can start the next wave
+
 **When to use**: Multi-module features, cross-layer changes (frontend + backend + tests).
 
 ### Debug Team (3-5 teammates)

@@ -120,37 +120,67 @@ Proceed with implementation?
 
 After the plan is approved, decide the execution strategy **autonomously** (do NOT ask the user):
 
-**Use agent teams when ALL of these are true:**
-- 3+ plan steps that can execute concurrently
-- Steps modify different file sets with no overlap
-- 5+ files being changed across 3+ directories
+**Use agent teams (preferred) when ALL steps are independent:**
+- All plan steps can execute concurrently (different file sets, no dependencies)
+- Steps naturally group into independent modules/layers
+- No step requires another step's output to begin
 
-**Use subagents (default) when ANY of these are true:**
-- Steps must execute in order (sequential dependencies)
-- Multiple steps modify the same files
-- Fewer than 3 files or 3 plan steps
+**Use hybrid mode when there is a MIX of dependencies and independence:**
+- Some steps have sequential dependencies but others are independent
+- A dependency chain exists but parallel branches fork from it (e.g., step 1 must run first, then steps 2, 3, 4 can run in parallel)
+- This is the most common pattern for real-world tasks
+
+**Fall back to subagents ONLY when ANY of these are true:**
+- Every step depends on the previous step's output (strict linear chain)
+- The task has only 1-2 steps total (genuine overhead concern)
+
+**REVIEW phase decision (separate from WORK):**
+- Default to review team (3 parallel reviewers) for all feature and refactor modes
+- Fall back to single reviewer only for trivial changes (1-2 files, single concern, no security-sensitive code)
 
 Display the decision:
 
 ```
 Execution strategy:
-  WORK: [subagent|agent team] ([brief reason])
-  REVIEW: [subagent|review team] ([brief reason])
+  WORK: [subagent|agent team|hybrid] — [reason]
+    [If hybrid: show parallel groups and serial steps]
+  REVIEW: [subagent|review team] — [reason]
 ```
 
 ---
 
 ## Phase 2: WORK
 
-### Subagent mode (default)
+### Subagent mode (sequential fallback)
 
 Use the **Task tool** to spawn a **workflow-implementer** subagent with this prompt:
 
 > Execute the implementation plan at `.work/plans/[plan-dir]/`. Read `todo.md` for the progress tracker and `plan.md` for step details. For each unchecked step: read the step details, implement the changes, verify the change works, then check off the item in `todo.md`. After all steps are done, add a review summary to `todo.md`.
 
+### Hybrid mode
+
+When hybrid is chosen, the orchestrator sequences work in waves:
+
+1. **Analyze the dependency graph**: Identify which steps must complete before others can start
+2. **Group into waves**: Each wave contains steps that can execute in parallel
+   - Wave 1: Steps with no dependencies (or the foundational step)
+   - Wave 2: Steps that depend on Wave 1 outputs
+   - Wave 3: Steps that depend on Wave 2 outputs (if any)
+3. **Execute waves sequentially, steps within waves in parallel**:
+   - For single-step waves: use a subagent (no team overhead)
+   - For multi-step waves: spawn an agent team with file ownership boundaries
+4. **Coordinate handoffs**: After each wave completes, verify outputs before starting the next wave
+
+Example for a 5-step plan where step 1 is foundational:
+```
+Wave 1 (subagent): Step 1 — install deps, create base config
+Wave 2 (team):     Step 2 — frontend component  |  Step 3 — backend API  |  Step 4 — database migration
+Wave 3 (subagent): Step 5 — integration wiring
+```
+
 ### Agent team mode
 
-When team is chosen, use the Task tool to create an agent team. Analyze plan steps to assign file ownership:
+When team is chosen (all steps are independent, no waves needed), use the Task tool to create an agent team. Analyze plan steps to assign file ownership:
 - Group steps by which files they modify
 - Assign each group to a teammate with clear boundaries
 - Ensure no two teammates modify the same file
@@ -208,20 +238,25 @@ This phase executes **at most once** per pipeline run.
 
 **Skip this phase for bugfix and hotfix modes.**
 
-### Subagent mode (default)
+### Review team mode (default)
 
-Use the **Task tool** to spawn a **review-code** subagent with this prompt:
-
-> Review the code changes from `git diff`. Focus on correctness, conventions, maintainability. Report issues by severity: CRITICAL, WARNING, SUGGESTION.
-
-### Review team mode
-
-When team review is chosen, spawn 3 parallel reviewers via Task tool:
+Spawn 3 parallel reviewers via Task tool:
 - Code quality reviewer: conventions, clarity, maintainability
 - Security reviewer: injection, auth, secrets, data protection
 - Performance reviewer: algorithms, queries, memory, concurrency
 
 Synthesize their reports when all complete.
+
+### Single reviewer mode (small changes only)
+
+Use single reviewer only when ALL of these are true:
+- 1-2 files changed
+- Changes are within a single module/concern
+- No security-sensitive code touched (auth, payments, crypto, user data)
+
+Use the **Task tool** to spawn a **review-code** subagent with this prompt:
+
+> Review the code changes from `git diff`. Focus on correctness, conventions, maintainability. Report issues by severity: CRITICAL, WARNING, SUGGESTION.
 
 ### Gate:
 

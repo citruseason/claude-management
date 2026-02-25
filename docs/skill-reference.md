@@ -76,9 +76,10 @@ Run the full development pipeline as a single automated command. Orchestrates sp
 **Resume**: If interrupted, `/run --resume` picks up from the last incomplete phase based on plan/todo state.
 
 **Autonomous team decision**: After the plan is created, the orchestrator analyzes step independence and autonomously decides whether to use agent teams (parallel) or subagents (sequential) for WORK and REVIEW phases. No flag needed — it evaluates:
-- Can steps execute in parallel? (different files, no dependencies)
-- Is the scope large enough to justify team overhead? (5+ files, 3+ directories)
-- Would parallel review add value? (multi-concern changes, security-sensitive code)
+- Are ALL steps independent? (different files, no dependencies) -> agent team
+- Do some steps have dependencies while others are independent? -> hybrid (wave-based)
+- Is every step strictly sequential? OR only 1-2 steps? -> subagent
+- REVIEW: defaults to parallel review team (3 reviewers) for feature/refactor modes
 
 ---
 
