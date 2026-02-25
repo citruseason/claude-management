@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Workflow orchestration plugin with Agent Teams + Skills for Claude Code",
   "author": {
-    "name": "claude-management",
-    "url": "https://github.com/claude-management/claude-management"
+    "name": "citruseason",
+    "url": "https://github.com/citruseason"
   },
-  "repository": "https://github.com/claude-management/claude-management",
+  "repository": "https://github.com/citruseason/claude-management",
   "license": "MIT",
   "keywords": [
     "workflow",
