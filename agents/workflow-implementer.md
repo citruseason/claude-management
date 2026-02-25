@@ -39,6 +39,15 @@ After implementation, provide:
 - **Verification**: How the changes were verified
 - **Notes**: Anything the reviewer should know
 
+## Skills
+
+When working on tasks that involve frontend UI, consult these skills for supplementary guidance. Skills are contextual — use them only when the task involves user-facing UI.
+
+### Design Quality (frontend-design)
+**When**: Implementing FULL-scope tasks that include user-facing UI (not backend-only or infrastructure tasks)
+**Skill file**: `skills/frontend-design/SKILL.md`
+**Focus**: Typography, color, motion, spatial composition — building distinctive interfaces instead of generic templates
+
 ## Rules
 
 - Always read files before editing them.

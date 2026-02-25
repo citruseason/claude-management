@@ -60,13 +60,29 @@ The pipeline:
 | Migration | Migration plan + rollback + risk | Dependent BE tasks |
 | Test | Per-scope test evidence | REVIEW phase |
 
+## Skills
+
+External skills provide supplementary guidance to specialist agents during frontend work.
+
+| Skill | Source | Used By |
+|-------|--------|---------|
+| web-design-guidelines | Vercel web-interface-guidelines | wf-fe-specialist, wf-reviewer |
+| vercel-react-best-practices | Vercel React/Next.js rules | wf-fe-specialist, wf-reviewer |
+| frontend-design | Anthropic creative design | wf-fe-specialist, workflow-implementer |
+
+Skills are contextual — agents consult them when working on relevant frontend tasks, not on every task.
+
 ## Directory Structure
 
 ```
 claude-management/
 ├── .claude-plugin/plugin.json    # Plugin manifest
 ├── agents/                       # 8 specialist agents
-├── skills/wf/SKILL.md            # /wf pipeline skill
+├── skills/
+│   ├── wf/SKILL.md                      # /wf pipeline skill
+│   ├── web-design-guidelines/SKILL.md   # UI quality rules (Vercel)
+│   ├── vercel-react-best-practices/SKILL.md # React/Next.js performance (Vercel)
+│   └── frontend-design/SKILL.md         # Creative design (Anthropic)
 ├── hooks/hooks.json              # Safety hooks
 ├── scripts/                      # Hook scripts
 ├── settings.json                 # Default permissions

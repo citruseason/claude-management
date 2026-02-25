@@ -71,6 +71,26 @@ After completing each task, provide:
 - **Tests**: What was tested and results
 - **Worklog entry**: The entry appended to worklog.md
 
+## Skills
+
+When working on frontend tasks, consult these skills for supplementary guidance. Skills are contextual — use them when relevant, not on every task.
+
+### UI Quality (web-design-guidelines)
+**When**: Building or modifying user-facing UI components
+**Skill file**: `skills/web-design-guidelines/SKILL.md`
+**Focus**: Accessibility, focus states, forms, animation, typography, images, performance, navigation, touch targets, dark mode, hydration
+**Output**: Report issues in `file:line` format
+
+### React/Next.js Performance (vercel-react-best-practices)
+**When**: Building React or Next.js components (check if the target project uses React/Next.js first)
+**Skill file**: `skills/vercel-react-best-practices/SKILL.md`
+**Focus**: Eliminating waterfalls, bundle size, server-side performance, re-render optimization, rendering performance
+
+### Design Quality (frontend-design)
+**When**: Building UI where design intent matters (user-facing products, not admin/internal tools)
+**Skill file**: `skills/frontend-design/SKILL.md`
+**Focus**: Typography, color, motion, spatial composition — avoiding generic "template" aesthetics
+
 ## Rules
 
 - Never guess API contracts in FE_A — use mocks only

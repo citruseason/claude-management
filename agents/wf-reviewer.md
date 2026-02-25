@@ -105,6 +105,22 @@ After completing the review, append to `worklog.md`:
 | [timestamp] | Reviewer | Review complete | — | Status: PASS/NEEDS_CHANGES/FAIL, N issues found |
 ```
 
+## Skills
+
+When reviewing frontend code, consult these skills for additional quality checks. Skills are contextual — use them only when reviewing frontend/UI changes.
+
+### UI Quality Review (web-design-guidelines)
+**When**: Reviewing code that includes user-facing UI changes
+**Skill file**: `skills/web-design-guidelines/SKILL.md`
+**Focus**: Check for accessibility issues, missing focus states, form validation gaps, animation performance, image optimization, navigation patterns
+**Integration**: Add findings from this skill to the "Code Quality" section of review.md, using `file:line` format
+
+### React/Next.js Performance Review (vercel-react-best-practices)
+**When**: Reviewing React or Next.js code changes (check if the target project uses React/Next.js first)
+**Skill file**: `skills/vercel-react-best-practices/SKILL.md`
+**Focus**: Check for render waterfalls, unnecessary client-side JavaScript, missing server-side optimization, re-render issues
+**Integration**: Add findings from this skill to the "Code Quality" section of review.md
+
 ## Rules
 
 - Read-only review — never modify implementation files
