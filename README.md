@@ -24,14 +24,13 @@ Workflow orchestration plugin for Claude Code with Agent Teams and Skills.
 ### Install
 
 ```bash
-# From GitHub
-claude plugin install citruseason/claude-management
+git clone https://github.com/citruseason/claude-management.git
 
-# Local (session only)
-claude --plugin-dir /path/to/claude-management
+# Session only
+claude --plugin-dir ./claude-management
 
-# Local (permanent)
-claude plugin install /path/to/claude-management
+# Permanent
+claude plugin install ./claude-management
 ```
 
 ### First Run
