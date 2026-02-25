@@ -3,7 +3,6 @@
 - **Simplicity First**: Make every change as simple as possible. Impact minimal code.
 - **No Laziness**: Find root causes. No temporary fixes. Senior developer standards.
 - **Minimal Impact**: Changes should only touch what's necessary. Avoid introducing bugs.
-- **No Guessing**: Contracts are based on BE outputs. FE never guesses API shapes.
 - **Gate Enforcement**: Gate failures block the next phase. Record failures and remediation.
 
 ## Self-Improvement Loop
@@ -39,25 +38,41 @@ Each `/wf` invocation creates a run directory at `.work/YYYYMMDD-HHmm-<slug>/`:
 6 columns: Backlog, Ready, In Progress, Blocked, Review, Done.
 
 Card format:
-`T-XXX | Title | Owner: ROLE | Scope: FE/BE/DBA | Phase: FE_A/BE/FE_B | Dep: T-YYY | Gate: contract/test | Link: plan/tasks/T-XXX.md`
+`T-XXX | Title | Owner: ROLE | Type: implement/design/test/migrate | Dep: T-YYY | Gate: plan/test | Link: plan/tasks/T-XXX.md`
 
 ### Gates
 
-4 gates control the pipeline flow:
-1. **Plan Gate** — plan artifacts exist, all tasks have scope/phase/gate
-2. **Contract Gate** — contract artifact + verification evidence before FE_B
-3. **Migration Gate** — migration plan + rollback + risk assessment (when DBA involved)
-4. **Test Gate** — per-scope test execution + evidence at wave completion
+2 gates control the pipeline flow:
+1. **Plan Gate** — plan artifacts exist, all tasks have type/gate
+2. **Test Gate** — test execution + evidence at wave completion
 
 ### Agent Team
 
 | Role | Agent | Responsibility |
 |------|-------|---------------|
-| Planner | workflow-planner (WF Mode) | Task decomposition, kanban init |
+| Planner | workflow-planner | Task decomposition, kanban init |
 | Router | wf-router | DAG construction, wave scheduling |
-| FE Specialist | wf-fe-specialist | FE_A (mocks) and FE_B (contract integration) |
-| BE Specialist | wf-be-specialist | API implementation, Contract Artifact generation |
-| DBA Specialist | wf-dba-specialist | Migrations, rollback plans |
+| Executor | oh-my-claudecode:executor | General implementation tasks |
+| Designer | oh-my-claudecode:designer | UI/UX design tasks |
+| Test Engineer | oh-my-claudecode:test-engineer | Test writing and execution |
+| Reviewer | oh-my-claudecode:code-reviewer | Quality/regression/risk review |
+| Security | oh-my-claudecode:security-reviewer | Security review |
 | Integrator | wf-integrator | Worklog updates, gate checks |
-| Reviewer | wf-reviewer | Quality/regression/risk review |
-| Implementer | workflow-implementer | FULL-scope tasks, agent failure fallback |
+| Fallback | oh-my-claudecode:deep-executor | FULL-scope tasks, agent failure fallback |
+
+### Skills
+
+| Skill | Type | Purpose |
+|-------|------|---------|
+| wf | Pipeline | Single-entry WF orchestrator (Phase 0-5) |
+| manage-skills | Maintenance | Session-based verify-* skill creation/update with dynamic discovery, user input, and AI session analysis |
+| verify-implementation | Verification | Parallel runner for all discovered verify-* skills with fix-and-re-verify workflow |
+| web-design-guidelines | Reference | UI review against Vercel Web Interface Guidelines |
+| vercel-react-best-practices | Reference | React/Next.js performance and pattern rules |
+| frontend-design | Reference | Creative frontend design guidance |
+
+**Skill Types:**
+- **Pipeline** — Core orchestrator skill invoked directly by users
+- **Maintenance** — Invoked by the WF pipeline (Phase 4) or directly to maintain verification skills
+- **Verification** — Runs discovered verify-* skills in parallel to validate implementation quality
+- **Reference** — Contextual guidance consulted by specialist agents during relevant work

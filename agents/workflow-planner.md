@@ -1,6 +1,6 @@
 ---
 name: workflow-planner
-description: Creates WF implementation plans with task decomposition, scope/phase/gate annotations, kanban initialization, and dependency graphs.
+description: Creates WF implementation plans with task decomposition, task-type annotations, kanban initialization, and dependency graphs.
 tools: Read, Grep, Glob, Bash, AskUserQuestion
 model: inherit
 maxTurns: 25
@@ -25,7 +25,7 @@ Skip clarification if: the task clearly states what/where/why, includes specific
 2. **Explore Context**: Analyze existing code, patterns, and constraints
 3. **Identify Risks**: Find potential blockers, edge cases, and dependencies
 4. **Design Approach**: Choose the simplest approach that meets requirements
-5. **Break Down Tasks**: Create T-XXX tasks with scope/phase/gate annotations
+5. **Break Down Tasks**: Create T-XXX tasks with task-type and gate annotations
 6. **Define Verification**: Specify how to verify each task is complete
 
 ## Directory Setup
@@ -48,10 +48,9 @@ Create these files/directories inside the run directory:
 Each task in the plan must include:
 - **T-XXX**: Sequential task ID (T-001, T-002, ...)
 - **Title**: Short descriptive title
-- **Scope**: `FE`, `BE`, `DBA`, or `FULL`
-- **Phase**: `FE_A` (mock-based), `BE` (API + contract), `FE_B` (contract integration), or `FULL`
+- **Type**: `implement`, `design`, `test`, or `migrate`
 - **Dependencies**: List of T-XXX IDs this task depends on (or "none")
-- **Gate**: Which gate must pass before this task is considered done (`plan`, `contract`, `migration`, `test`, or `none`)
+- **Gate**: Which gate must pass before this task is considered done (`plan`, `test`, or `none`)
 - **Details**: Specific implementation instructions
 - **Verification**: How to confirm the task is complete
 
@@ -63,7 +62,7 @@ Create `kanban.md` with all tasks in the Backlog column:
 # Kanban Board
 
 ## Backlog
-T-XXX | Title | Owner: — | Scope: FE/BE/DBA | Phase: FE_A/BE/FE_B | Dep: T-YYY | Gate: contract/test | Link: plan/tasks/T-XXX.md
+T-XXX | Title | Owner: — | Type: implement/design/test/migrate | Dep: T-YYY | Gate: plan/test/none | Link: plan/tasks/T-XXX.md
 
 ## Ready
 
@@ -77,7 +76,7 @@ T-XXX | Title | Owner: — | Scope: FE/BE/DBA | Phase: FE_A/BE/FE_B | Dep: T-YYY
 ```
 
 Card format:
-`T-XXX | Title | Owner: ROLE | Scope: FE/BE/DBA | Phase: FE_A/BE/FE_B | Dep: T-YYY | Gate: contract/test | Link: plan/tasks/T-XXX.md`
+`T-XXX | Title | Owner: ROLE | Type: implement/design/test/migrate | Dep: T-YYY | Gate: plan/test/none | Link: plan/tasks/T-XXX.md`
 
 ## Worklog Initialization
 
@@ -88,27 +87,27 @@ Create `worklog.md`:
 
 | Time | Agent | Action | Task | Details |
 |------|-------|--------|------|---------|
-| [init] | Planner | Plan created | — | N tasks, M with FE/BE split |
+| [init] | Planner | Plan created | — | N tasks |
 ```
 
 ## Plan Gate Self-Check
 
 Before returning, validate that the plan passes the Plan Gate:
 1. All plan task files exist (if using `plan/tasks/T-XXX.md` format)
-2. Every task has: Scope, Phase, Gate, and Dependencies defined
+2. Every task has: Type, Gate, and Dependencies defined
 3. `kanban.md` contains all tasks in Backlog
 4. `worklog.md` is initialized
 5. No circular dependencies in the task graph
 
 If any check fails, fix the issue before returning.
 
-## Scope Assignment Rules
+## Task Type Assignment Rules
 
-- UI/frontend work: Scope=FE, Phase=FE_A (initial) or FE_B (after contract)
-- API/backend work: Scope=BE, Phase=BE
-- Database migrations: Scope=DBA, Phase=BE
-- Spans multiple scopes: split into separate tasks per scope
-- Purely infrastructural (setup, config): Scope=FULL, Phase=FULL
+- UI/visual work: Type=design
+- API/logic/feature code: Type=implement
+- Database migrations: Type=migrate
+- Automated checks or verification scripts: Type=test
+- Spans multiple concerns: split into separate tasks per type
 
 ## Rules
 
