@@ -2,7 +2,7 @@
 name: manage-skills
 description: Analyzes session changes to detect missing verification skills. Explores existing skills, creates new verify-* skills or updates existing ones, and keeps the skill registry in sync.
 disable-model-invocation: true
-argument-hint: "[optional: specific skill name or area to focus on]"
+argument-hint: "[optional: specific skill name or area to focus on] [--from-verify]"
 ---
 
 # Manage Skills
@@ -10,6 +10,21 @@ argument-hint: "[optional: specific skill name or area to focus on]"
 Analyze changes and manage verification skills:
 
 **Focus**: $ARGUMENTS
+
+## Step 0: Check for Pre-analyzed Input
+
+If invoked with `--from-verify`:
+
+1. Parse the Gap Analysis section from the verify report (passed as argument or available in context)
+2. Extract:
+   - External skills needing WRAP actions (skill name, type, recommended wrapper name)
+   - Any coverage gap notes from the verify report
+3. Skip Step 1 (session change analysis) — the verify report already identified what needs attention
+4. Skip Step 2 (discover existing verify skills) — already known from verify's gap analysis
+5. Skip Step 2.5 (discover external skills) — already classified in verify's gap analysis
+6. Proceed directly to Step 3 (Coverage Gap Analysis) with the pre-analyzed data, then Step 4 (Propose Actions)
+
+If NOT invoked with --from-verify, proceed to Step 1 as normal (full discovery).
 
 ## Step 1: Analyze Session Changes
 

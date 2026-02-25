@@ -15,6 +15,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `/run` pipeline rewritten with imperative phase instructions and mandatory plan verification
 - `/verify` now discovers and reports external (non-verify-*) skills alongside verification skills
 - `/manage-skills` now proposes WRAP actions to create verify-* wrappers for external skills
+- `/verify` now produces structured Gap Analysis identifying external skills without wrappers and offers to invoke `/manage-skills`
+- `/manage-skills` accepts `--from-verify` flag to skip redundant discovery when invoked from `/verify`'s gap analysis
+- `/run` pipeline adds conditional Phase 3.5 (MANAGE-SKILLS) that automatically addresses verification gaps
 
 ### Removed
 - `research-docs` agent — orphaned, never referenced by any skill or agent

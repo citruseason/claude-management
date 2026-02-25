@@ -73,9 +73,9 @@ Pipeline complete.
 
 | Mode | Pipeline | Auto-detect keywords |
 |------|----------|---------------------|
-| feature | PLAN → WORK → VERIFY → REVIEW → SHIP | (default) |
-| bugfix | EXPLORE → WORK → VERIFY → SHIP | bug, fix, error, crash |
-| refactor | PLAN → WORK → VERIFY → REVIEW → SHIP | refactor, restructure |
+| feature | PLAN → WORK → VERIFY [→ MANAGE-SKILLS] → REVIEW → SHIP | (default) |
+| bugfix | EXPLORE → WORK → VERIFY [→ MANAGE-SKILLS] → SHIP | bug, fix, error, crash |
+| refactor | PLAN → WORK → VERIFY [→ MANAGE-SKILLS] → REVIEW → SHIP | refactor, restructure |
 | hotfix | WORK → VERIFY → SHIP | urgent, hotfix, emergency |
 
 ```
@@ -367,6 +367,31 @@ Now when you run `/verify`, it automatically discovers and executes these skills
 
 Fix all / Fix individually / Skip?
 ```
+
+### Integration: /verify triggers /manage-skills
+
+When `/verify` finds external skills without wrappers, it offers to create them:
+
+```
+/verify
+
+## Verification Report
+### Status: PASS
+
+### Gap Analysis
+#### External Skills Without Wrappers
+| # | Skill | Type | Recommended Action |
+|---|-------|------|-------------------|
+| 1 | vercel-react-best-practices | guidelines | WRAP -> verify-react |
+
+1 external skill(s) lack verify-* wrappers.
+Create wrappers now? [Yes / Skip]
+```
+
+Selecting "Create wrappers now" invokes `/manage-skills --from-verify`, which skips
+redundant discovery and directly proposes the WRAP actions identified by `/verify`.
+
+In the `/run` pipeline, this handoff happens automatically in Phase 3.5.
 
 ### Evolution: Skills grow with your code
 
@@ -660,70 +685,24 @@ Produces API documentation from the actual route code, including request/respons
 
 > You've installed external skills from skills.sh and want them to work with the pipeline.
 
-### Step 1: Install external skills
+### Streamlined: /verify discovers and /manage-skills wraps
 
-```
-claude skill install vercel-labs/agent-skills/vercel-react-best-practices
-claude skill install anthropics/skills/frontend-design
-```
-
-These are installed into `.claude/skills/` automatically.
-
-### Step 2: Run /init to discover them
-
-```
-/init
-```
-
-```
-## Installed Skills Detected
-| Source | Name | Type |
-|--------|------|------|
-| external | vercel-react-best-practices | guidelines |
-| external | frontend-design | guidelines |
-```
-
-### Step 3: Create verify wrappers
-
-```
-/manage-skills
-```
-
-```
-### From External Skills
-1. WRAP vercel-react-best-practices -> verify-react
-   Rationale: Contains component structure and hook rules
-2. WRAP frontend-design -> verify-frontend
-   Rationale: Contains file organization and naming rules
-
-Proceed? [Yes]
-```
-
-After approval, verify wrappers are created in `.claude/skills/`.
-
-### Step 4: Run the pipeline
+After installing external skills, simply run the pipeline:
 
 ```
 /run Add new dashboard component
 ```
 
-During VERIFY phase, both the new verify-react and verify-frontend wrappers
-are auto-executed alongside any existing verify-* skills.
+During Phase 3 (VERIFY), the verifier discovers the external skills and reports them
+in the Gap Analysis. Phase 3.5 automatically invokes `/manage-skills --from-verify`
+to create wrappers. After approval, VERIFY re-runs with the new wrappers active.
+
+You can also do this manually:
 
 ```
-### Verify Skills
-| # | Skill | Checks | Passed | Issues |
-|---|-------|--------|--------|--------|
-| 1 | verify-react | 6 | 5 | 1 |
-| 2 | verify-frontend | 4 | 4 | 0 |
-
-### Issues Found
-| # | Skill | File | Problem | Fix |
-|---|-------|------|---------|-----|
-| 1 | verify-react | src/Dashboard.tsx | Missing error boundary | Wrap in ErrorBoundary |
+/verify                    # Discovers gaps, offers to create wrappers
+/manage-skills             # Or run independently for full analysis
 ```
-
-The external skill's best practices are now enforced automatically in every pipeline run.
 
 ---
 

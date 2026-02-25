@@ -62,14 +62,16 @@ Run the full development pipeline as a single automated command. Orchestrates sp
 
 | Mode | Pipeline | Auto-detect keywords |
 |------|----------|---------------------|
-| feature | PLAN → WORK → VERIFY → REVIEW → SHIP | (default) |
-| bugfix | EXPLORE → WORK → VERIFY → SHIP | bug, fix, error, crash |
-| refactor | PLAN → WORK → VERIFY → REVIEW → SHIP | refactor, restructure |
+| feature | PLAN → WORK → VERIFY [→ MANAGE-SKILLS] → REVIEW → SHIP | (default) |
+| bugfix | EXPLORE → WORK → VERIFY [→ MANAGE-SKILLS] → SHIP | bug, fix, error, crash |
+| refactor | PLAN → WORK → VERIFY [→ MANAGE-SKILLS] → REVIEW → SHIP | refactor, restructure |
 | hotfix | WORK → VERIFY → SHIP | urgent, hotfix, emergency |
 
 **User gates**: Pauses for confirmation after PLAN and before SHIP. All other phases execute automatically.
 
 **Auto-fix loop**: If VERIFY or REVIEW finds issues, the orchestrator attempts to fix them automatically (max 2 cycles) before escalating to the user.
+
+**Gap resolution**: After VERIFY, conditionally runs MANAGE-SKILLS if verification found external skills without wrappers. Skipped in hotfix mode.
 
 **Resume**: If interrupted, `/run --resume` picks up from the last incomplete phase based on plan/todo state.
 
@@ -276,7 +278,9 @@ Run all registered verify-* skills and general checks.
 3. Runs general checks (tests, lint, build, types)
 4. Produces integrated report with PASS/FAIL per skill
 5. Offers to auto-fix issues found
-6. Lists external (non-verify-*) skills as available but not auto-executed
+6. Produces Gap Analysis identifying external skills without verify-* wrappers
+7. When standalone: offers to invoke /manage-skills to create wrappers
+8. When in /run pipeline: gap data is passed to Phase 3.5 automatically
 
 ---
 
@@ -329,6 +333,7 @@ Analyze code changes and auto-generate/update project verification skills.
 5. Creates/updates skills after user approval
 6. Verifies all changes are valid
 7. Proposes WRAP actions for external skills that lack verify-* wrappers
+8. Accepts --from-verify flag to skip discovery and use pre-analyzed gap data from /verify
 
 ---
 
@@ -469,13 +474,7 @@ $ claude /init
 | external | web-design-guidelines | guidelines | Available |
 | plugin | verify-api | verification | Active |
 
-Tip: Run /manage-skills to create verify-* wrappers for external skills.
-
-$ claude /manage-skills
-
-### From External Skills
-1. WRAP vercel-react-best-practices -> verify-react
-   Rationale: Contains component and hook rules that can be verified
+Tip: Run /manage-skills to create verify-* wrappers, or let /verify discover gaps automatically.
 
 $ claude /verify
 

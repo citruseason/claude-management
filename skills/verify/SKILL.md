@@ -45,8 +45,8 @@ Found [M] external skills (not auto-executed):
 1. vercel-react-best-practices — React patterns from Vercel
 2. web-design-guidelines — Design system guidelines
 
-Note: External skills are not auto-executed. Run /manage-skills to create
-verify-* wrappers that integrate them into the verification pipeline.
+Note: [N] external skill(s) without verify-* wrappers found. These will be
+included in the Gap Analysis section of the verification report.
 ```
 
 If no external skills are found, omit the external skills section entirely.
@@ -104,14 +104,29 @@ Consolidate all results into a single report:
 |---|-------|------|------|---------|-----|
 | 1 | verify-auth | src/auth.ts | 42 | Missing token validation | Add validateToken() call |
 
-### External Skills (Not Executed)
-| # | Skill | Description | Has Wrapper |
-|---|-------|-------------|-------------|
-| 1 | vercel-react-best-practices | React patterns | No — run /manage-skills |
-| 2 | frontend-design | Frontend arch | Yes (verify-frontend) |
+### Gap Analysis
 
-To integrate external skills into verification, run /manage-skills to create verify-* wrappers.
+#### External Skills Without Wrappers
+| # | Skill | Description | Type | Recommended Action |
+|---|-------|-------------|------|-------------------|
+| 1 | vercel-react-best-practices | React patterns | guidelines | WRAP -> verify-react |
+
+#### Already Wrapped (Active)
+| # | External Skill | Wrapper | Status |
+|---|---------------|---------|--------|
+| 1 | frontend-design | verify-frontend | Executed above |
+
+#### Recommendation
+[N] external skill(s) lack verify-* wrappers and were not executed during this verification.
+Run `/manage-skills` to create wrappers and integrate them into the verification pipeline.
 ```
+
+If gap analysis found issues, present via `AskUserQuestion`:
+- **Create wrappers now** — invoke /manage-skills to address the gaps
+- **Skip** — continue without addressing gaps
+
+Note: The /run pipeline does not act on this prompt — it handles gap resolution
+automatically in Phase 3.5 (MANAGE-SKILLS) instead.
 
 ## Step 5: Fix Proposal (if issues found)
 

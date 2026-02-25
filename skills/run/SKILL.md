@@ -57,19 +57,19 @@ If external skills are found:
 
 ```
 External skills detected:
-  - vercel-react-best-practices (no verify wrapper)
+  - vercel-react-best-practices (no verify wrapper — will be addressed in Phase 3.5)
   - frontend-design (verify-frontend wrapper active)
 
-Tip: Run /manage-skills after this pipeline to create verify wrappers.
+External skills without wrappers will be analyzed during verification and addressed in Phase 3.5.
 ```
 
 If no external skills are found, skip this section entirely (no noise).
 
 Phase sequences by mode:
-- **feature**: PLAN → WORK → VERIFY → REVIEW → SHIP
-- **bugfix**: EXPLORE → WORK → VERIFY → SHIP
-- **refactor**: PLAN → WORK → VERIFY → REVIEW → SHIP
-- **hotfix**: WORK → VERIFY → SHIP
+- **feature**: PLAN → WORK → VERIFY [→ MANAGE-SKILLS] → REVIEW → SHIP
+- **bugfix**: EXPLORE → WORK → VERIFY [→ MANAGE-SKILLS] → SHIP
+- **refactor**: PLAN → WORK → VERIFY [→ MANAGE-SKILLS] → REVIEW → SHIP
+- **hotfix**: WORK → VERIFY → SHIP  (no MANAGE-SKILLS in hotfix mode)
 
 ---
 
@@ -166,15 +166,38 @@ Do NOT proceed to verification if work is incomplete.
 
 Use the **Task tool** to spawn a **workflow-verifier** subagent with this prompt:
 
-> Verify the implementation is correct. Run the project test suite, linters, type checks, and build. Check for any verify-* skills in `.claude/skills/` and run those too. Also list any external (non-verify-*) skills found in `.claude/skills/` in the report as "Available but not executed" — these need verify-* wrappers to be auto-executed (run /manage-skills to create them). Produce a verification report with PASS/FAIL status.
+> Verify the implementation is correct. Run the project test suite, linters, type checks, and build. Check for any verify-* skills in `.claude/skills/` and run those too. For any external (non-verify-*) skills found in `.claude/skills/`, include a structured Gap Analysis section in the report: classify each by type (verification/guidelines/tooling), note which have verify-* wrappers and which do not, and recommend WRAP actions for unwrapped skills. Produce a verification report with PASS/FAIL status.
 
 ### Gate:
 
-- **PASS** → proceed to Phase 4 (REVIEW)
+- **PASS** → proceed to Phase 3.5 (MANAGE-SKILLS, conditional), then Phase 4 (REVIEW)
 - **FAIL** →
   1. Use Task tool to spawn a **workflow-implementer** to fix the issues
   2. Re-run Phase 3 (VERIFY)
   3. Maximum 2 fix-verify cycles. If still failing after 2 cycles, report to user and stop.
+
+---
+
+## Phase 3.5: MANAGE-SKILLS (conditional)
+
+**Skip this phase if**: mode is hotfix, OR the Phase 3 verification report contains no Gap Analysis section, OR the Gap Analysis shows zero external skills without wrappers.
+
+**Execute this phase if**: mode is NOT hotfix AND the verification report's Gap Analysis identifies external skills without verify-* wrappers.
+
+This phase executes **at most once** per pipeline run.
+
+1. Extract the Gap Analysis section from the Phase 3 verification report
+2. Run `/manage-skills --from-verify` inline, passing the gap analysis data
+3. `/manage-skills` will propose WRAP actions for external skills — present to user for approval
+4. If user approves wraps and new verify-* wrappers are created:
+   - Re-run Phase 3 (VERIFY) to include the newly created wrappers
+   - This is NOT counted against the max 2 fix-verify cycles
+   - The re-run's Gap Analysis does NOT trigger Phase 3.5 again
+5. If user skips or no wraps are needed → proceed to Phase 4
+
+### Gate:
+- After Phase 3.5 completes (wrappers created, skipped, or not needed) → proceed to Phase 4 (REVIEW)
+- This phase never blocks the pipeline — it is always advisory
 
 ---
 
