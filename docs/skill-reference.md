@@ -231,6 +231,8 @@ Create a detailed implementation plan before starting work.
 - `plan.md` — detailed design document (inline steps for short plans, index + sub-files for long plans)
 - `todo.md` — progress tracker with links to plan sections
 
+**Clarification**: If the task description is ambiguous (vague goal, missing scope, unclear requirements), the planner asks clarifying questions before creating the plan. Clear tasks proceed without questions.
+
 ---
 
 #### /work
@@ -513,7 +515,7 @@ Agents that drive the plan-work-verify cycle.
 
 | Agent | Purpose | Model | Max Turns | Tools |
 |-------|---------|-------|-----------|-------|
-| workflow-planner | Implementation planning (read-only) | inherit | 25 | Read, Grep, Glob, Bash |
+| workflow-planner | Implementation planning (read-only, may ask clarifying questions) | inherit | 25 | Read, Grep, Glob, Bash, AskUserQuestion |
 | workflow-implementer | Code implementation (read-write) | inherit | 30 | Read, Write, Edit, Grep, Glob, Bash |
 | workflow-verifier | Testing and verification (read-only) | inherit | 20 | Read, Grep, Glob, Bash |
 

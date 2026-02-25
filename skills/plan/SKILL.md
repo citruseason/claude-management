@@ -1,7 +1,7 @@
 ---
 name: plan
 description: Create a detailed implementation plan by analyzing requirements and exploring the codebase. Use before starting any non-trivial feature or change.
-allowed-tools: Read, Grep, Glob, Bash
+allowed-tools: Read, Grep, Glob, Bash, AskUserQuestion
 context: fork
 agent: workflow-planner
 ---
@@ -11,6 +11,39 @@ agent: workflow-planner
 Create an implementation plan for:
 
 **Task**: $ARGUMENTS
+
+## Step 0: Assess Task Clarity
+
+Before exploring the codebase, evaluate whether the task description provides enough
+information to create a concrete plan. Consider these ambiguity signals:
+
+- **Vague goal**: The task says "improve" or "fix" without specifying what success looks like
+- **Missing scope**: It is unclear which components, files, or features are affected
+- **Ambiguous requirements**: Multiple valid interpretations exist and the right one is unclear
+- **Unknown constraints**: Technical constraints (performance, compatibility, dependencies) are unspecified but would significantly affect the approach
+- **Missing context**: References to external systems, prior decisions, or domain knowledge that you cannot infer from the codebase
+
+### When to ask
+
+If TWO or more ambiguity signals are present, use `AskUserQuestion` to ask focused
+clarifying questions. Batch related questions into a single ask (do not ask one at a time).
+
+Example:
+> The task says "improve the authentication system." I have a few questions before planning:
+> 1. What specific aspect needs improvement — security, performance, UX, or adding new auth methods?
+> 2. Are there any constraints on the approach (e.g., must keep backward compatibility)?
+> 3. Is there a specific problem or incident that triggered this request?
+
+### When NOT to ask
+
+Proceed directly to planning (skip clarification) if:
+- The task clearly states what to build, where, and why
+- Only ONE ambiguity signal is present and you can resolve it by exploring the codebase
+- The task includes specific file paths, error messages, or concrete acceptance criteria
+- The task is a continuation of an existing plan (e.g., "implement step 3 of the auth plan")
+
+After receiving answers (or determining clarification is unnecessary), proceed to the
+regular planning process below.
 
 ## Instructions
 

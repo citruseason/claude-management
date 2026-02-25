@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Skill registry (`.work/skill-registry.md`) — auto-generated inventory of plugin, verify, and external skills
 
 ### Changed
+- `/plan` (and Phase 1 of `/run`) now asks clarifying questions via `AskUserQuestion` when task instructions are ambiguous (vague goal, missing scope, unclear requirements); skips clarification for well-defined tasks
 - `/run` pipeline rewritten with imperative phase instructions and mandatory plan verification
 - `/verify` now discovers and reports external (non-verify-*) skills alongside verification skills
 - `/manage-skills` now proposes WRAP actions to create verify-* wrappers for external skills

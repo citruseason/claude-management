@@ -143,6 +143,21 @@ Add JWT-based authentication to all /api/* routes.
 ## Review
 ```
 
+**Ambiguous tasks**: If the task is vague (e.g., "improve the authentication system"), the planner asks clarifying questions before creating the plan:
+
+```
+/plan Improve the authentication system
+
+> Before I create a plan, I have a few questions:
+> 1. What specific aspect needs improvement — security, performance, or UX?
+> 2. Are there any compatibility constraints?
+> 3. What triggered this request?
+
+[User answers...]
+
+Plan created: .work/plans/02-improve-auth/ (4 steps)
+```
+
 ### Step 2: Work
 
 ```

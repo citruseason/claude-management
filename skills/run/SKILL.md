@@ -84,6 +84,9 @@ Use the **Task tool** to spawn a **workflow-planner** subagent with this prompt:
 > Create an implementation plan for the following task. You MUST create files under `.work/plans/[number-name]/` (e.g. `.work/plans/01-feature-name/`). Check existing `.work/plans/` to determine the next number. Create both `plan.md` (design document with steps) and `todo.md` (checkable progress tracker).
 >
 > Task: [full task description]
+>
+> If the task description is unclear or ambiguous, ask the user clarifying questions
+> before creating the plan. For clear tasks, proceed directly.
 
 ### For bugfix mode:
 
