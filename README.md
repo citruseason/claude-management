@@ -21,17 +21,27 @@ Workflow orchestration plugin for Claude Code with Agent Teams and Skills.
 
 ## Quick Start
 
-### Install as Plugin
+### Install
 
 ```bash
-# From GitHub (when published)
-claude plugin install claude-management/claude-management
+# From GitHub
+claude plugin install <github-username>/claude-management
 
-# Local development
-claude --plugin-dir ./claude-management
+# Local (session only)
+claude --plugin-dir /path/to/claude-management
+
+# Local (permanent)
+claude plugin install /path/to/claude-management
 ```
 
-### Use Slash Commands
+### First Run
+
+```
+/init                    # Set up project (directories, rules, .gitignore)
+/run Add JWT auth        # Full pipeline: plan → work → verify → review → ship
+```
+
+### Slash Commands
 
 ```
 /init                    # Set up project (directories, rules, .gitignore)
@@ -52,6 +62,39 @@ claude --plugin-dir ./claude-management
 /lesson Always check X  # Record a lesson
 /retrospective          # Run retrospective
 ```
+
+### Plan Modification
+
+`/run` and `/plan` pause after creating a plan for your review:
+
+```
+Plan created: .work/plans/01-add-auth/ (5 steps)
+Proceed with implementation?
+```
+
+You can request changes before approving:
+
+```
+> "Add signup endpoint to Step 3"
+> "Use Toss Payments instead of Stripe"
+> "Split Step 2 into separate middleware files"
+```
+
+The planner re-runs with your feedback. Repeat until satisfied, then approve.
+
+### Resume Interrupted Work
+
+Progress is persisted in `.work/plans/*/todo.md`. If a session is interrupted:
+
+```
+/run --resume            # Auto-detect last plan, continue from where it stopped
+/work                    # Or manually execute the latest plan
+```
+
+`--resume` reads `todo.md` and picks up at the right phase:
+- Unchecked steps remain → resumes at WORK
+- All steps done, no commit → resumes at VERIFY
+- No plan exists → starts from PLAN
 
 ## Architecture
 
