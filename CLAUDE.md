@@ -70,9 +70,11 @@ Card format:
 | web-design-guidelines | Reference | UI review against Vercel Web Interface Guidelines |
 | vercel-react-best-practices | Reference | React/Next.js performance and pattern rules |
 | frontend-design | Reference | Creative frontend design guidance |
+| skill-maker | Maintenance | Skill design and creation guided by best practices |
+| authoring-skills | Verification | Skill validation against best practices checklist |
 
 **Skill Types:**
 - **Pipeline** — Core orchestrator skill invoked directly by users
-- **Maintenance** — Invoked by the WF pipeline (Phase 4) or directly to maintain verification skills
+- **Maintenance** — Invoked by the WF pipeline (Phase 4) or directly to maintain/create skills
 - **Verification** — Runs discovered verify-* skills in parallel to validate implementation quality
 - **Reference** — Contextual guidance consulted by specialist agents during relevant work
